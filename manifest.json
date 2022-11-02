@@ -1,0 +1,4 @@
+{
+  "namespace": "dev_stub",
+  "setup": "setup.mjs"
+}
