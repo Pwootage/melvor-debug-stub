@@ -133,23 +133,27 @@ export async function setup(ctx) {
     }
   });
 
-  //ok now we can load the mod
-  const manifest = await loadJson("manifest.json");
+  try {
+    //ok now we can load the mod
+    const manifest = await loadJson("manifest.json");
 
-  if (manifest.setup) {
-    const { setup } = await loadModule(manifest.setup);
-    await setup(ctx);
-  }
-  if (manifest.load) {
-    if (Array.isArray(manifest.load)) {
-      for (const resource of manifest.load) {
-        if (isValidLoadResource(resource)) {
-          await loadResource(resource);
-        }
-      }
-    } else if (isValidLoadResource(manifest.load)) {
-      await loadResource(manifest.load);
+    if (manifest.setup) {
+      const { setup } = await loadModule(manifest.setup);
+      await setup(ctx);
     }
+    if (manifest.load) {
+      if (Array.isArray(manifest.load)) {
+        for (const resource of manifest.load) {
+          if (isValidLoadResource(resource)) {
+            await loadResource(resource);
+          }
+        }
+      } else if (isValidLoadResource(manifest.load)) {
+        await loadResource(manifest.load);
+      }
+    }
+    console.log('Loaded mod from debug stub');
+  } catch (e) {
+    console.error('Failed to load mod from debug stub', e);
   }
-  console.log('Loaded mod from debug stub');
 }
